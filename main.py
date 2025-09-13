@@ -40,7 +40,7 @@ chunked_df = page_content.split_text(
 docs = page_content.document_loader(chunked_df,
                                     page_content_column = 'page_content')
 
-pc = pinecone_upsert.pinecone_initialise_pinecone(pinecone_api_key)
+pc = pinecone_upsert.initialise_pinecone(pinecone_api_key)
 
 index = pinecone_upsert.init_index(
     pc,
@@ -78,6 +78,7 @@ conversation = llm_integration.invoke_chat(
         chat,
 
         messages)
+
 
 
 
