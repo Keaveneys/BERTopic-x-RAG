@@ -1,9 +1,9 @@
 import embeddings
 import bertopic
 import pinecone_upsert
-import page_conent
+import page_content
 import llm_integration
-
+from openai import OpenAI
 
 client = OpenAI(api_key=api_key)
 
@@ -14,7 +14,7 @@ datasets = load_dataset("maartengr/arxiv_nlp")["train"]
 documents = datasets["Abstracts"]
 
 embedding_model = embeddings.instantiate_embedding_model(api_key=api_key)
-embeddings_result_result = embeddings.embed_documents(embedding_model, documents)
+embeddings_result = embeddings.embed_documents(embedding_model, documents)
 
 umap_model = bertopic.dimensionality_reduction()
 hdbscan_model = bertopic.clustering_model()
@@ -22,7 +22,8 @@ topic_model = bertopic.topic_model(embedding_model,
                                           umap_model,
                                           hdbscan_model)
 
-mapped_df = bertopic.label_topics(topic_model, documents)
+openai_labels = bertopic.label_topics(topic_model, documents)
+mapped_df = bertopic.create_topic_df(topic_model, documents, openai_labels)
 
 chunked_df = page_content.split_text(
     mapped_df,
@@ -37,9 +38,9 @@ chunked_df = page_content.split_text(
 docs = page_content.document_loader(chunked_df,
                                     page_content_column = 'page_content')
 
-pc = Pinecone_upsert.pinecone_initialise_pinecone(pinecone_api_key)
+pc = pinecone_upsert.pinecone_initialise_pinecone(pinecone_api_key)
 
-index = Pinecone_upsert.init_index(
+index = pinecone_upsert.init_index(
     pc,
     index_name = "INSERT INDEX NAME",
     dimension = 1536, #change dimension based on embedding models
@@ -50,31 +51,32 @@ index = Pinecone_upsert.init_index(
 Be mindful of upsert limits. Pinecone allows a maximum of 100 vectors per upsert request.
 """
 
-Pinecone_upsert.batch_upsert(
+pinecone_upsert.batch_upsert(
     index,
     embedding_model,
     docs,
     id_column = "ID column"
 )
 
-vectorstore = Pinecone_upsert.query_index(
+vectorstore = pinecone_upsert.query_index(
     text_field = 'chunk',
     embedding_model = embedding_model,
     index = index
 )
 
-messages = LLM_integration.create_messages()
+messages = llm_integration.create_messages()
 
-chat = LLM_integration.instantiate_chat_model(
+chat = llm_integration.instantiate_chat_model(
     api_key,
 )
 
-augmented_prompt = LLM_integration.augment_prompt(vectorstore)
+augmented_prompt = llm_integration.augment_prompt(vectorstore)
 
-conversation = LLM_integration.invoke_chat(
+conversation = llm_integration.invoke_chat(
         chat,
 
         messages)
+
 
 
 
