@@ -6,7 +6,7 @@ from openai import OpenAI
 import os
 import pandas as pd
 
-def dimensionality_reduction(n_components = 5, min_dist = 0.1, metric = 'cosine', randome_state = 42):
+def dimensionality_reduction(n_components = 5, min_dist = 0.1, metric = 'cosine', random_state = 42):
     umap_model = UMAP(n_components = n_components
                       , min_dist = min_dist
                       , metric = metric
@@ -68,7 +68,7 @@ def label_topics(topic_model, documents):
     return openai_labels
 
 def create_topic_df(topic_model, documents, openai_labels):
-    mapped_df = pd.DataFrame(topic_model.get_document_info(docs = abstracts))
+    mapped_df = pd.DataFrame(topic_model.get_document_info(docs = documents))
     # Map the OpenAI labels instead of the default BERTopic names
     mapped_df['Name'] = mapped_df['Topic'].map(openai_labels)
     return mapped_df

@@ -3,10 +3,9 @@ import pandas as pd
 from langchain.document_loaders import DataFrameLoader
 
 
-def construct_page_content(dataframe,topic_name_column, topic_number_column, chunk_column, id_column):
+def construct_page_content(dataframe,topic_name_column, topic_number_column,id_column, chunk_column = 'chunk'):
     dataframe['page_content'] = "Topic: " + dataframe[topic_number_column].astype(str) + ": " + dataframe[topic_name_column].astype(str) + "\n\n" + \
-    "ID: " + dataframe[id_column].astype(str) + "\n\n" + \n
-    "Chunk: " + dataframe[chunk_column]
+    "ID: " + dataframe[id_column].astype(str) + "\n\n" + "Chunk: " + dataframe[chunk_column]
 
     return dataframe
 
