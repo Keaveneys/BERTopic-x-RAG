@@ -19,8 +19,10 @@ embeddings_result = embeddings.embed_documents(embedding_model, documents)
 umap_model = bertopic.dimensionality_reduction()
 hdbscan_model = bertopic.clustering_model()
 topic_model = bertopic.topic_model(embedding_model,
-                                          umap_model,
-                                          hdbscan_model)
+                                  umap_model,
+                                  hdbscan_model,
+                                  documents,
+                                  embeddings)
 
 openai_labels = bertopic.label_topics(topic_model, documents)
 mapped_df = bertopic.create_topic_df(topic_model, documents, openai_labels)
@@ -76,6 +78,7 @@ conversation = llm_integration.invoke_chat(
         chat,
 
         messages)
+
 
 
 
