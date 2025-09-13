@@ -14,7 +14,7 @@ datasets = load_dataset("maartengr/arxiv_nlp")["train"]
 documents = datasets["Abstracts"]
 
 embedding_model = embeddings.instantiate_embedding_model(api_key=api_key)
-embeddings = embeddings.embed_documents(embedding_model, documents)
+embeddings_result_result = embeddings.embed_documents(embedding_model, documents)
 
 umap_model = bertopic.dimensionality_reduction()
 hdbscan_model = bertopic.clustering_model()
@@ -75,3 +75,4 @@ conversation = LLM_integration.invoke_chat(
         chat,
 
         messages)
+
