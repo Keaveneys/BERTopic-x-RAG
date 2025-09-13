@@ -20,13 +20,13 @@ def clustering_model(min_cluster_size = 15, metric = 'euclidean', cluster_select
                             , cluster_selection_method = cluster_selection_method)
     return hdbscan_model
 
-def topic_model(embedding_model, umap_model, hdbscan_model, abstracts, embeddings):
+def topic_model(embedding_model, umap_model, hdbscan_model, documents, embeddings):
     topic_model = BERTopic(
     embedding_model = embedding_model,
     umap_model = umap_model,
     hdbscan_model = hdbscan_model,
     verbose = True 
-).fit(abstracts, np.array(embeddings))
+).fit(documents, np.array(embeddings))
     return topic_model 
 
 client = OpenAI(api_key=api_key)
@@ -72,5 +72,6 @@ def create_topic_df(topic_model, documents, openai_labels):
     # Map the OpenAI labels instead of the default BERTopic names
     mapped_df['Name'] = mapped_df['Topic'].map(openai_labels)
     return mapped_df
+
 
 
