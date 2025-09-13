@@ -34,9 +34,10 @@ def instantiate_chat_model(model_name="gpt-4o-mini", temperature = 0, api_key = 
 
 def invoke_chat(chat, messages):
     query = input("Enter your question: ")
-    prompt = HumanMessage(content=augment_prompt(augment_prompt(query)))
+    prompt = HumanMessage(content=augment_prompt(vectorstore, query))
     messages.append(prompt)
     res = chat(messages)
     messages.append(res)
     print(res.content)
-    return None
+    return messages
+
