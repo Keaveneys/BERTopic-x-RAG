@@ -1,8 +1,8 @@
 import embeddings
 import bertopic
-import Pinecone-upsert
+import Pinecone_upsert
 import page_conent
-import LLM-integration
+import LLM_integration
 
 
 client = OpenAI(api_key=api_key)
@@ -37,9 +37,9 @@ chunked_df = page_content.split_text(
 docs = page_content.document_loader(chunked_df,
                                     page_content_column = 'page_content')
 
-pc = Pinecone-upsert.pinecone_initialise_pinecone(pinecone_api_key)
+pc = Pinecone_upsert.pinecone_initialise_pinecone(pinecone_api_key)
 
-index = Pinecone-upsert.init_index(
+index = Pinecone_upsert.init_index(
     pc,
     index_name = "INSERT INDEX NAME",
     dimension = 1536, #change dimension based on embedding models
@@ -50,27 +50,28 @@ index = Pinecone-upsert.init_index(
 Be mindful of upsert limits. Pinecone allows a maximum of 100 vectors per upsert request.
 """
 
-Pinecone-upsert.batch_upsert(
+Pinecone_upsert.batch_upsert(
     index,
     embedding_model,
     docs,
     id_column = "ID column"
 )
 
-vectorstore = Pinecone-upsert.query_index(
+vectorstore = Pinecone_upsert.query_index(
     text_field = 'chunk',
     embedding_model = embedding_model,
     index = index
 )
 
-messages = LLM-integration.create_messages()
+messages = LLM_integration.create_messages()
 
-chat = LLM-integration.instantiate_chat_model(
+chat = LLM_integration.instantiate_chat_model(
     api_key,
 )
 
-augmented_prompt = LLM-integration.augment_prompt(vectorstore)
+augmented_prompt = LLM_integration.augment_prompt(vectorstore)
 
-conversation = LLM-integration.invoke_chat(
+conversation = LLM_integration.invoke_chat(
         chat,
+
         messages)
