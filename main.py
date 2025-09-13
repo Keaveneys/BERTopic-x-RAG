@@ -18,7 +18,7 @@ embeddings_result_result = embeddings.embed_documents(embedding_model, documents
 
 umap_model = bertopic.dimensionality_reduction()
 hdbscan_model = bertopic.clustering_model()
-topic_model = bertopic.create_topic_model(embedding_model,
+topic_model = bertopic.topic_model(embedding_model,
                                           umap_model,
                                           hdbscan_model)
 
@@ -75,4 +75,5 @@ conversation = LLM_integration.invoke_chat(
         chat,
 
         messages)
+
 
