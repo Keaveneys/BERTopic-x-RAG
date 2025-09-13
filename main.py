@@ -1,8 +1,8 @@
 import embeddings
 import bertopic
-import Pinecone_upsert
+import pinecone_upsert
 import page_conent
-import LLM_integration
+import llm_integration
 
 
 client = OpenAI(api_key=api_key)
@@ -75,5 +75,6 @@ conversation = LLM_integration.invoke_chat(
         chat,
 
         messages)
+
 
 
